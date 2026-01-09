@@ -17,7 +17,9 @@ if "kota" not in st.session_state:
     st.session_state.kota = []
 
 if st.session_state.step == 0:
-    
+    st.session_state.kota.clear()
+    st.session_state.pin.clear()
+
     st.title("Menentukan Rute Optimal dengan TSP")
     st.text("Permasalahan TSP (Traveling Salesman Problem ) adalah permasalahan dimana seorang salesman harus mengunjungi semua kota dimana tiap kota hanya dikunjungi sekali, dan dia harus mulai dari dan kembali ke kota asal. Tujuannya adalah menentukan rute dengan jarak total atau biaya yang paling minimum. ")
     st.subheader("Pilih metode (manual atau Excel)")
