@@ -4,3 +4,4 @@ streamlit-folium
 pandas
 numpy
 pulp
+openpyxl
