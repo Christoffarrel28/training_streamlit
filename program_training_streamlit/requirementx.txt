@@ -1,5 +1,6 @@
 streamlit
 folium
-streamlit-folium
+streamlit_folium
 pandas
-numpy
+pulp
+math
