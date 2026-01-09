@@ -61,7 +61,8 @@ if st.session_state.step == 2:
     else:
         m = folium.Map(
             location= st.session_state.pin[-1],
-            zoom_start= 14        
+            zoom_start= 14,
+            tiles="OpenStreetMap"
         )
 
     for i, j in enumerate(st.session_state.pin, start= 1):
@@ -122,7 +123,8 @@ if st.session_state.step == 3:
     
     m = folium.Map(
         location= st.session_state.pin[0],
-        zoom_start= 14        
+        zoom_start= 14,
+        tiles="OpenStreetMap"
     )
     kota_index = {}
     if st.session_state.kota == []:
@@ -191,6 +193,7 @@ if st.session_state.step == 3:
 
 
     
+
 
 
 
