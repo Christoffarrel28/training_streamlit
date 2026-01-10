@@ -41,20 +41,25 @@ if st.session_state.step == 1:
     
     st.header("Jumlah Kota")
     st.divider()
-    st.session_state.maks_pin = (st.number_input("Masukkan jumlah kota", step= 1, min_value=2))
-    tombol_1 = st.button("Selanjutnya")
-    if tombol_1:
-        st.session_state.step = 2
-        st.session_state.pin.clear()
-        st.rerun()
-    tombol_sekian = st.button("Sebelumnya")
-    if tombol_sekian:
-        st.session_state.step = 0
-        st.rerun()
+    st.session_state.maks_pin = (st.number_input("Masukkan jumlah kota yang diinginkan", step= 1, min_value=2))
+
+    col_sekian, col_segitu = st.columns(2)
+    with col_segitu:
+        tombol_1 = st.button("Selanjutnya")
+        if tombol_1:
+            st.session_state.step = 2
+            st.session_state.pin.clear()
+            st.rerun()
+    with col_sekian:
+        tombol_sekian = st.button("Sebelumnya")
+        if tombol_sekian:
+            st.session_state.step = 0
+            st.rerun()
 
 if st.session_state.step == 2:
     st.title("Pilih Titik Kota Pada Map")
     st.divider()
+    st.text(f"{len(st.session_state.pin)}/{st.session_state.maks_pin} Kota")
     if st.session_state.pin == []:
         m = folium.Map(
             location=[-7.983908,112.6280556],
@@ -89,29 +94,38 @@ if st.session_state.step == 2:
         if tombol_2:
             st.session_state.step = 1
             st.rerun()
-    with col2:
-        tombol_3 = st.button("Hitung TSP")
-        if tombol_3:
-            st.session_state.step = 3
-            st.rerun()
+    if len(st.session_state.pin) == st.session_state.maks_pin:
+        with col2:
+            tombol_3 = st.button("Hitung TSP")
+            if tombol_3:
+                st.session_state.step = 3
+                st.rerun()
 
 if st.session_state.step == 4:
+    
     st.session_state.file = st.file_uploader("Masukkan file excel", type="xlsx")
+
+    col_itu, col_ini = st.columns(2)
     if st.session_state.file is not None:
         df_excel = pd.read_excel(st.session_state.file)
 
         st.session_state.kota = df_excel["Kota"].str.title().dropna().tolist()
-        
+            
         st.session_state.pin = df_excel[["latitude", "longitude"]].dropna().astype(float).values.tolist()
 
-    tombol_5 = st.button("Hitung TSP")
-    if tombol_5:
-        st.session_state.step = 3
-        st.rerun()
-    tombol_segitu = st.button("Sebelumnya")
-    if tombol_segitu:
-        st.session_state.step = 0
-        st.rerun()
+        with col_ini:
+            tombol_5 = st.button("Hitung TSP")
+            if tombol_5:
+                st.session_state.step = 3
+                st.rerun()
+    
+    with col_itu:
+        tombol_segitu = st.button("Sebelumnya")
+        if tombol_segitu:
+            st.session_state.step = 0
+            st.rerun()
+
+
 
 if st.session_state.step == 3:
     st.title("Apa hayo")
