@@ -15,6 +15,8 @@ if "file" not in st.session_state:
     st.session_state.file = None
 if "kota" not in st.session_state:
     st.session_state.kota = []
+if "hasil_tsp" not in st.session_state:
+    st.session_state.hasil_tsp = None
 
 if st.session_state.step == 0:
     st.session_state.kota.clear()
@@ -98,6 +100,7 @@ if st.session_state.step == 2:
         with col2:
             tombol_3 = st.button("Hitung TSP")
             if tombol_3:
+                st.session_state.hasil_tsp = tsp(st.session_state.pin)
                 st.session_state.step = 3
                 st.rerun()
 
@@ -116,6 +119,7 @@ if st.session_state.step == 4:
         with col_ini:
             tombol_5 = st.button("Hitung TSP")
             if tombol_5:
+                st.session_state.hasil_tsp = tsp(data_kota=st.session_state.pin, nama_kota= st.session_state.kota)
                 st.session_state.step = 3
                 st.rerun()
     
@@ -131,10 +135,8 @@ if st.session_state.step == 3:
     st.title("Apa hayo")
     # st.balloons()
     st.divider()
-    if st.session_state.kota == []:
-        urutan_rute, jarak_total, data_jarak = tsp(st.session_state.pin)
-    else:
-        urutan_rute, jarak_total, data_jarak = tsp(data_kota=st.session_state.pin, nama_kota= st.session_state.kota)            
+
+    urutan_rute, jarak_total, data_jarak = st.session_state.hasil_tsp             
     
     m = folium.Map(
         location= st.session_state.pin[0],
