@@ -43,6 +43,7 @@ if st.session_state.step == 0:
             st.session_state.step = 4
             st.rerun()    
 
+
 if st.session_state.step == 1:
     
     st.header("Jumlah Kota")
@@ -84,9 +85,7 @@ if st.session_state.step == 2:
             icon=folium.Icon(color=warna_warni[i], icon="city", prefix= "fa",)
 
         ).add_to(m)
-        opsi = []
-        opsi.append(f"Kota-{i}" )       
-
+    
     col_map, col_hapus = st.columns([3,1])
     with col_map:
         data_kota = st_folium(m, height= 500, width= 500)
@@ -100,6 +99,9 @@ if st.session_state.step == 2:
 
     with col_hapus:
         if st.session_state.pin:
+            opsi = []
+            for i in range(len(st.session_state.pin)):
+                opsi.append(f"Kota-{i+1}" )               
             hapus_kota = st.selectbox("Pilih kota", opsi)
             if st.button("Hapus Kota"):
                 i = opsi.index(hapus_kota)
@@ -207,27 +209,9 @@ if st.session_state.step == 3:
         for i, j in urutan_rute:
             st.write(f"{i} → {j}")       
 
-    
     st.write(f"Tota jarak adalah {jarak_total:.2f} km")
 
     tombol_4 = st.button("Selesai")
     if tombol_4:
         st.session_state.step = 0
         st.rerun()
-
-
-
-
-    
-
-
-
-
-    
-
-
-
-
-
-
-
