@@ -18,6 +18,10 @@ if "kota" not in st.session_state:
 if "hasil_tsp" not in st.session_state:
     st.session_state.hasil_tsp = None
 
+@st.cache_data(show_spinner="Menghitung TSP", ttl=60,)
+def hitung_tsp_cached(pin, nama_kota=None):
+    return tsp(data_kota=pin, nama_kota=nama_kota)
+
 if st.session_state.step == 0:
     st.session_state.kota.clear()
     st.session_state.pin.clear()
@@ -26,6 +30,7 @@ if st.session_state.step == 0:
     st.text("Permasalahan TSP (Traveling Salesman Problem ) adalah permasalahan dimana seorang salesman harus mengunjungi semua kota dimana tiap kota hanya dikunjungi sekali, dan dia harus mulai dari dan kembali ke kota asal. Tujuannya adalah menentukan rute dengan jarak total atau biaya yang paling minimum. ")
     st.subheader("Pilih metode (manual atau Excel)")
     col_man, col_dat = st.columns(2)
+    
     with col_man:
         tombol_manual = st.button("Manual")
         if tombol_manual:
@@ -38,12 +43,11 @@ if st.session_state.step == 0:
             st.session_state.step = 4
             st.rerun()    
 
-
 if st.session_state.step == 1:
     
     st.header("Jumlah Kota")
     st.divider()
-    st.session_state.maks_pin = (st.number_input("Masukkan jumlah kota yang diinginkan", step= 1, min_value=2))
+    st.session_state.maks_pin = (st.number_input("Masukkan jumlah kota yang diinginkan", min_value=3))
 
     col_sekian, col_segitu = st.columns(2)
     with col_segitu:
@@ -77,11 +81,15 @@ if st.session_state.step == 2:
         folium.Marker(
             location= j,
             tooltip= folium.Tooltip(f"Kota-{i}", permanent=False, direction="bottom", sticky= False),
-            icon=folium.Icon(color=warna_warni[i], icon="city", prefix= "fa")
+            icon=folium.Icon(color=warna_warni[i], icon="city", prefix= "fa",)
 
         ).add_to(m)
+        opsi = []
+        opsi.append(f"Kota-{i}" )       
 
-    data_kota = st_folium(m, height= 500, width= 500)
+    col_map, col_hapus = st.columns([3,1])
+    with col_map:
+        data_kota = st_folium(m, height= 500, width= 500)
 
     if data_kota["last_clicked"] and len(st.session_state.pin) < st.session_state.maks_pin:
         st.session_state.pin.append(
@@ -90,17 +98,26 @@ if st.session_state.step == 2:
         )
         st.rerun()
 
+    with col_hapus:
+        if st.session_state.pin:
+            hapus_kota = st.selectbox("Pilih kota", opsi)
+            if st.button("Hapus Kota"):
+                i = opsi.index(hapus_kota)
+                st.session_state.pin.pop(i)
+                st.rerun()
+        
     col1, col2 = st.columns(2,gap="large")
     with col1:
         tombol_2 = st.button("Sebelumnya")
         if tombol_2:
             st.session_state.step = 1
             st.rerun()
+
     if len(st.session_state.pin) == st.session_state.maks_pin:
         with col2:
             tombol_3 = st.button("Hitung TSP")
             if tombol_3:
-                st.session_state.hasil_tsp = tsp(st.session_state.pin)
+                st.session_state.hasil_tsp = hitung_tsp_cached(st.session_state.pin)
                 st.session_state.step = 3
                 st.rerun()
 
@@ -119,7 +136,7 @@ if st.session_state.step == 4:
         with col_ini:
             tombol_5 = st.button("Hitung TSP")
             if tombol_5:
-                st.session_state.hasil_tsp = tsp(data_kota=st.session_state.pin, nama_kota= st.session_state.kota)
+                st.session_state.hasil_tsp = hitung_tsp_cached(st.session_state.pin, st.session_state.kota)
                 st.session_state.step = 3
                 st.rerun()
     
@@ -128,8 +145,6 @@ if st.session_state.step == 4:
         if tombol_segitu:
             st.session_state.step = 0
             st.rerun()
-
-
 
 if st.session_state.step == 3:
     st.title("Apa hayo")
@@ -167,7 +182,6 @@ if st.session_state.step == 3:
             index_kota = st.session_state.kota[i]
             kota_index[index_kota] = i
 
-    
     for idx, (i, j) in enumerate(urutan_rute,start=1):
         folium.PolyLine(
             [
@@ -191,7 +205,8 @@ if st.session_state.step == 3:
     with col4:
 
         for i, j in urutan_rute:
-            st.write(f"{i} → {j}")
+            st.write(f"{i} → {j}")       
+
     
     st.write(f"Tota jarak adalah {jarak_total:.2f} km")
 
