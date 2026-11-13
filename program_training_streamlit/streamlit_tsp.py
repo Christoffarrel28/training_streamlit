@@ -27,9 +27,9 @@ if "hasil_tsp" not in st.session_state:
 if st.session_state.step == 0:
     st.session_state.kota.clear()
     st.session_state.marker.clear()
-    c1 =st.container(border=True)
+    c1 =st.container(border=True, gap="xxsmall")
     with c1:
-        st.title("Menentukan Rute Optimal dengan TSP",)
+        st.title("Menentukan Rute Optimal dengan TSP")
         st.divider()
         st.text(
         "Permasalahan TSP (Traveling Salesman Problem) adalah permasalahan " \
@@ -140,7 +140,7 @@ if st.session_state.step == 3:
 
         st.session_state.file = st.file_uploader("Masukkan file excel", type="xlsx")
 
-        col_back_3, col_next_3 = st.columns(2)
+        col_back_3, col_next_3 = st.columns([5,1])
         if st.session_state.file is not None:
             df_excel = pd.read_excel(st.session_state.file)
 
