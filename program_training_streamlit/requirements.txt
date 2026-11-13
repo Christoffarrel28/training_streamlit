@@ -3,5 +3,5 @@ folium
 streamlit-folium
 pandas
 numpy
-pulp
+pulp==3.3.0
 openpyxl
