@@ -47,8 +47,6 @@ def tsp(data_kota, nama_kota = None):
     for (i, j), d in jarak.items():
         df_jarak.loc[i, j] = d
 
-    # df_jarak = df_jarak.astype(int)
-
     problem = lp.LpProblem("TSP", lp.LpMinimize)
 
     '''4. Mendefinisikan Variabel Keputusan'''
